@@ -18,13 +18,12 @@ def get_all_planets():
 @planets_bp.get("/<planet_id>")
 def get_one_planet(planet_id):
     planet = validate_planet(planet_id)
-    for planet in planets:
-        return dict(
-            id = planet.id,
-            name = planet.name,
-            description = planet.description,
-            color = planet.color
-        )
+    return dict(
+        id = planet.id,
+        name = planet.name,
+        description = planet.description,
+        color = planet.color
+    )
 
 def validate_planet(planet_id):
     try:
