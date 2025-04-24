@@ -25,7 +25,7 @@ def create_planet():
 
 
 @planets_bp.get("")
-def get_all_books():
+def get_all_planets():
     query = db.select(Planet).order_by(Planet.id)
     planets = db.session.scalars(query)
     #line above could also be written as:
