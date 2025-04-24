@@ -24,8 +24,24 @@ def create_planet():
     return response, 201
 
 
+@planets_bp.get("")
+def get_all_books():
+    query = db.select(Planet).order_by(Planet.id)
+    planets = db.session.scalars(query)
+    #line above could also be written as:
+    #planets = db.session.execute(query).scalars()
 
-
+    planets_response = []
+    for planet in planets:
+        planets_response.append(
+            {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "color": planet.color
+            }
+        )
+    return planets_response
 
 
 
