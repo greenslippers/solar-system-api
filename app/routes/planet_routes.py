@@ -62,9 +62,6 @@ def get_all_planets():
 def get_one_planet(planet_id):
     planet = validate_planet(planet_id)
 
-    query = db.select(Planet).where(Planet.id == planet_id)
-    planet = db.session.scalar(query)
-
     return dict(
         id = planet.id,
         name = planet.name,
@@ -93,9 +90,6 @@ def delete_planet(planet_id):
     db.session.commit()
 
     return Response(status=204, mimetype="application/json")
-
-
-
 
 
 def validate_planet(planet_id):
