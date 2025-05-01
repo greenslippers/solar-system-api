@@ -36,11 +36,11 @@ def client(app):
 def two_saved_planets(app):
     # Arrange
     mercury_planet = Planet(name="Mercury",
-                      description="the smallest planet",
-                      color="gray")
+                    description="the smallest planet",
+                    color="gray")
     earth_planet = Planet(name="Earth",
-                      description="our home planet",
-                      color="blue")
+                    description="our home planet",
+                    color="blue")
 
     db.session.add_all([mercury_planet, earth_planet])
     db.session.commit()

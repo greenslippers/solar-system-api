@@ -1,3 +1,5 @@
+
+
 def test_get_all_planets_with_no_records(client):
     # Act
     response = client.get("/planets")
@@ -38,3 +40,4 @@ def test_create_one_planet(client):
         "description": "beautiful",
         "color": "red"
     }
+
