@@ -7,13 +7,6 @@ class Planet(db.Model):
     description: Mapped[str]
     color: Mapped[str]
 
-    @classmethod
-    def from_dict(cls, planet_data):
-        new_planet = Planet(name=planet_data["name"],
-                            description=planet_data["description"],
-                            color=planet_data["color"])
-        return new_planet
-    
     def to_dict(self):
         planet_as_dict = {
             "id": self.id,
@@ -23,25 +16,13 @@ class Planet(db.Model):
         }
 
         return planet_as_dict
-
-
-
-
-
-
-
-
-
-# class Planet:
-#     def __init__(self, id, name, description, color):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-#         self.color = color
-
-# planets = [
-#     Planet(1, "Earth", "Home planet", "blue"),
-#     Planet(2, "Venus", "Second planet", "red"),
-#     Planet(3, "Saturn", "Has rings", "purple")
-# ]
     
+    @classmethod
+    def from_dict(cls, planet_data):
+        new_planet = Planet(name=planet_data["name"],
+                            description=planet_data["description"],
+                            color=planet_data["color"])
+        return new_planet
+    
+    
+
