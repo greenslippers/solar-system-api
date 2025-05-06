@@ -15,11 +15,12 @@ class Planet(db.Model):
         return new_planet
     
     def to_dict(self):
-        planet_as_dict = {}
-        planet_as_dict["id"] = self.id
-        planet_as_dict["name"] = self.name
-        planet_as_dict["description"] = self.description
-        planet_as_dict["color"] = self.color
+        planet_as_dict = {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "color": self.color
+        }
 
         return planet_as_dict
 
