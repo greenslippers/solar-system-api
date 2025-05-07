@@ -20,12 +20,15 @@ class Planet(db.Model):
             "color": self.color
         }
 
+        if self.moons:
+            planet_as_dict["moons"] = [moon.to_dict() for moon in self.moons]
+
         return planet_as_dict
-    
+        
     # class method, creates a new instance of Planet from dict (planet_data)
     @classmethod
     def from_dict(cls, planet_data):
-        new_planet = Planet(name=planet_data["name"],
+        new_planet = cls(name=planet_data["name"],
                             description=planet_data["description"],
                             color=planet_data["color"])
         return new_planet

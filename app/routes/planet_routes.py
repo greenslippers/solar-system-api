@@ -1,5 +1,6 @@
 from flask import Blueprint, abort, make_response, request, Response
 from app.models.planet import Planet
+from app.models.moon import Moon
 from app.routes.route_utilities import validate_model
 from ..db import db
 
@@ -20,7 +21,6 @@ def create_planet():
     db.session.commit()
 
     return new_planet.to_dict(), 201
-
 
 @bp.get("")
 def get_all_planets():
@@ -48,21 +48,6 @@ def get_all_planets():
         planets_response.append(planet.to_dict())
 
     return planets_response
-
-
-
-
-# @planets_bp.get("")
-# def get_all_planets():
-#     result_list = []
-#     for planet in planets:
-#         result_list.append(dict(
-#             id = planet.id,
-#             name = planet.name,
-#             description = planet.description,
-#             color = planet.color
-#         ))
-#     return result_list
 
 @bp.get("/<planet_id>")
 def get_one_planet(planet_id):
@@ -92,3 +77,27 @@ def delete_planet(planet_id):
 
     return Response(status=204, mimetype="application/json")
 
+@bp.post("/<planet_id>/moons")
+def create_moon_with_planet(planet_id):
+    planet = validate_model(Planet, planet_id)
+    
+    request_body = request.get_json()
+    request_body["planet_id"] = planet.id
+
+    try:
+        new_moon = Moon.from_dict(request_body)
+
+    except KeyError as error:
+        response = {"message": f"Invalid request: missing {error.args[0]}"}
+        abort(make_response(response, 400))
+        
+    db.session.add(new_moon)
+    db.session.commit()
+
+    return make_response(new_moon.to_dict(), 201)
+
+@bp.get("/<planet_id>/moons")
+def get_moons_by_planet(planet_id):
+    planet = validate_model(Planet, planet_id)
+    response = [moon.to_dict() for moon in planet.moons]
+    return response

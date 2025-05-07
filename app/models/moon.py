@@ -22,11 +22,19 @@ class Moon(db.Model):
             "size": self.size
         }
 
+        if self.planet:
+            moon_as_dict["planet"] = self.planet.name
+
         return moon_as_dict
     
     @classmethod
     def from_dict(cls, moon_data):
-        new_moon = Moon(name=moon_data["name"],
-                            description=moon_data["description"],
-                            size=moon_data["size"])
+        planet_id = moon_data.get("planet_id")
+
+        new_moon = cls(
+            name=moon_data["name"],
+            description=moon_data["description"],
+            size=moon_data["size"],
+            planet_id=planet_id
+            )
         return new_moon
