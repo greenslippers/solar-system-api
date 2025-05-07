@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.models.moon import Moon
 from ..db import db
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app.models.moon import Moon 
 
 class Planet(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
