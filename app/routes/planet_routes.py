@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from app.models.planet import Planet
 from app.models.moon import Moon
-from app.routes.route_utilities import validate_model, create_model
+from app.routes.route_utilities import validate_model, create_model, get_models_with_filters
 from ..db import db
 
 bp = Blueprint("planets_bp", __name__, url_prefix = "/planets")
@@ -26,30 +26,32 @@ def create_planet():
 
 @bp.get("")
 def get_all_planets():
-    query = db.select(Planet)
+    return get_models_with_filters(Planet, request.args)
 
-    description_param = request.args.get("description")
-    if description_param:
-        query = query.where(Planet.description.ilike(f"%{description_param}%"))
+    # query = db.select(Planet)
 
-    name_param = request.args.get("name")
-    if name_param:
-        query = query.where(Planet.name.ilike(f"%{name_param}%"))
+    # description_param = request.args.get("description")
+    # if description_param:
+    #     query = query.where(Planet.description.ilike(f"%{description_param}%"))
 
-    color_param = request.args.get("color")
-    if color_param:
-        query = query.where(Planet.color.ilike(f"%{color_param}%"))
+    # name_param = request.args.get("name")
+    # if name_param:
+    #     query = query.where(Planet.name.ilike(f"%{name_param}%"))
 
-    query = query.order_by(Planet.id)
-    planets = db.session.scalars(query)
-    #line above could also be written as:
-    #planets = db.session.execute(query).scalars()
+    # color_param = request.args.get("color")
+    # if color_param:
+    #     query = query.where(Planet.color.ilike(f"%{color_param}%"))
 
-    planets_response = []
-    for planet in planets:
-        planets_response.append(planet.to_dict())
+    # query = query.order_by(Planet.id)
+    # planets = db.session.scalars(query)
+    # #line above could also be written as:
+    # #planets = db.session.execute(query).scalars()
 
-    return planets_response
+    # planets_response = []
+    # for planet in planets:
+    #     planets_response.append(planet.to_dict())
+
+    # return planets_response
 
 @bp.get("/<planet_id>")
 def get_one_planet(planet_id):
@@ -86,17 +88,19 @@ def create_moon_with_planet(planet_id):
     request_body = request.get_json()
     request_body["planet_id"] = planet.id
 
-    try:
-        new_moon = Moon.from_dict(request_body)
+    return create_model(Moon, request_body)
 
-    except KeyError as error:
-        response = {"message": f"Invalid request: missing {error.args[0]}"}
-        abort(make_response(response, 400))
+    # try:
+    #     new_moon = Moon.from_dict(request_body)
+
+    # except KeyError as error:
+    #     response = {"message": f"Invalid request: missing {error.args[0]}"}
+    #     abort(make_response(response, 400))
         
-    db.session.add(new_moon)
-    db.session.commit()
+    # db.session.add(new_moon)
+    # db.session.commit()
 
-    return make_response(new_moon.to_dict(), 201)
+    # return make_response(new_moon.to_dict(), 201)
 
 @bp.get("/<planet_id>/moons")
 def get_moons_by_planet(planet_id):

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, make_response, abort
 from app.models.moon import Moon
-from app.routes.route_utilities import validate_model, create_model
+from app.routes.route_utilities import validate_model, create_model, get_models_with_filters
 from ..db import db
 
 bp = Blueprint("moons_bp", __name__, url_prefix="/moons")
@@ -25,14 +25,15 @@ def create_moon():
 
 @bp.get("")
 def get_all_moons():
-    query = db.select(Moon)
+    return get_models_with_filters(Moon, request.args)
+    # query = db.select(Moon)
 
-    name_param = request.args.get("name")
-    if name_param:
-        query = query.where(Moon.name.ilike(f"%{name_param}%"))
+    # name_param = request.args.get("name")
+    # if name_param:
+    #     query = query.where(Moon.name.ilike(f"%{name_param}%"))
 
-    moons = db.session.scalars(query.order_by(Moon.id))
-    # Use list comprehension syntax to create the list `authors_response`
-    moons_response = [moon.to_dict() for moon in moons]
+    # moons = db.session.scalars(query.order_by(Moon.id))
+    # # Use list comprehension syntax to create the list `authors_response`
+    # moons_response = [moon.to_dict() for moon in moons]
 
-    return moons_response
+    # return moons_response
