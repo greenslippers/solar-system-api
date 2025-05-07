@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from app.models.planet import Planet
 from app.models.moon import Moon
-from app.routes.route_utilities import validate_model
+from app.routes.route_utilities import validate_model, create_model
 from ..db import db
 
 bp = Blueprint("planets_bp", __name__, url_prefix = "/planets")
@@ -10,17 +10,19 @@ bp = Blueprint("planets_bp", __name__, url_prefix = "/planets")
 def create_planet():
     request_body = request.get_json()
 
-    try:
-        new_planet = Planet.from_dict(request_body)
+    return create_model(Planet, request_body)
 
-    except KeyError as error:
-        response = {"message": f"Invalid request: missing {error.args[0]}"}
-        abort(make_response(response, 400))
+    # try:
+    #     new_planet = Planet.from_dict(request_body)
 
-    db.session.add(new_planet)
-    db.session.commit()
+    # except KeyError as error:
+    #     response = {"message": f"Invalid request: missing {error.args[0]}"}
+    #     abort(make_response(response, 400))
 
-    return new_planet.to_dict(), 201
+    # db.session.add(new_planet)
+    # db.session.commit()
+
+    # return new_planet.to_dict(), 201
 
 @bp.get("")
 def get_all_planets():

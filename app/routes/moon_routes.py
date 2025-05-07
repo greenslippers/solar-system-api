@@ -1,5 +1,6 @@
 from flask import Blueprint, request, make_response, abort
 from app.models.moon import Moon
+from app.routes.route_utilities import validate_model, create_model
 from ..db import db
 
 bp = Blueprint("moons_bp", __name__, url_prefix="/moons")
@@ -8,17 +9,19 @@ bp = Blueprint("moons_bp", __name__, url_prefix="/moons")
 def create_moon():
     request_body = request.get_json()
 
-    try:
-        new_moon = Moon.from_dict(request_body)
-        
-    except KeyError as error:
-        response = {"message": f"Invalid request: missing {error.args[0]}"}
-        abort(make_response(response, 400))
-    
-    db.session.add(new_moon)
-    db.session.commit()
+    return create_model(Moon, request_body)
 
-    return make_response(new_moon.to_dict(), 201)
+    # try:
+    #     new_moon = Moon.from_dict(request_body)
+        
+    # except KeyError as error:
+    #     response = {"message": f"Invalid request: missing {error.args[0]}"}
+    #     abort(make_response(response, 400))
+    
+    # db.session.add(new_moon)
+    # db.session.commit()
+
+    # return make_response(new_moon.to_dict(), 201)
 
 @bp.get("")
 def get_all_moons():
